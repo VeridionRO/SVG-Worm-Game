@@ -11,14 +11,22 @@ MainController.prototype.paddleH = 10;
 MainController.prototype.paddleD = this.boardY - this.paddleH;
 MainController.prototype.paddleW = 150;
 MainController.prototype.gameLoop = null;
+MainController.prototype.wormsBallLoop = null;
+MainController.prototype.wormMove = 10;
+MainController.prototype.wormSpeed = 100;
 
 MainController.prototype.documentReady = function() {
   // Play the game until the ball stops.
-  mainController.gameLoop = setInterval(mainController.drawBall, 16);
+  mainController.gameLoop = setInterval(
+    mainController.drawBall, 16);
+  mainController.wormsBallLoop = setInterval(
+    mainController.moveWormsBall, 3000);
   // Add keyboard listener.
   window.addEventListener('keydown', mainController.whatKey, true);
   // draw lines
   mainController.drawLines();
+  mainController.gameLoop = setInterval(
+    mainController.moveWorm, mainController.wormSpeed);
 }
 
 MainController.prototype.drawBall = function() {
@@ -86,10 +94,24 @@ MainController.prototype.drawLine = function(line, type, i) {
   newLine.setAttribute("id", 'line' + i);
 }
 
-MainController.prototype.drawCircle = function(){
-  // 
-  var cx = Math.floor((Math.random()*79)+1) * 5;
-  var cy = Math.floor((Math.random()*79)+1) * 5;
+MainController.prototype.moveWormsBall = function(){
+  // create random positioning for dot for the worm to eat
+  var cx = (Math.floor( Math.random() * 79 / 2 ) * 2 + 1) * 5;
+  var cy = (Math.floor( Math.random() * 79 / 2 ) * 2 + 1) * 5;
+  wormsBall.setAttribute('cx', cx);
+  wormsBall.setAttribute('cy', cy);
+}
+
+MainController.prototype.drawWorm = function(){
+  
+}
+
+MainController.prototype.moveWorm = function(){
+  
+}
+
+function WormPart(){
+  
 }
 
 var mainController = new MainController();
