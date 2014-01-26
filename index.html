@@ -1,0 +1,34 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <script type="text/javascript" src="index.js"></script>
+</head>
+
+<body onload="mainController.documentReady()">
+  <h1>SVG Racketball</h1>
+  <!-- Create the SVG pane. -->
+  <svg xmlns="http://www.w3.org/2000/svg" height="400" width="400">
+    <!-- Create the board. -->
+    <rect x="1" y="1" width="298" height="298" fill="thistle" id="bpard" />
+    <!-- Create the ball. -->
+    <circle cx="150" cy="150" r="15" fill="tomato" id="ball" />
+    <!-- Create the paddle. -->
+    <rect x="150" y="290" width="150" height="10" fill="navy" id="paddle"/>
+  </svg>
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="400" width="400" id="wormBoard">
+    <!-- Create the board. -->
+    <rect x="0" y="0" width="400" height="400" fill="thistle"/>
+    <line x1="0" y1="0" 
+          x2="0" y2="400" 
+          stroke="black" 
+          stroke-width="0.1" id="lineX"/>
+    <line x1="0" y1="0" 
+          x2="400" y2="0" 
+          stroke="black" 
+          stroke-width="0.1" id="lineY"/>
+  </svg>
+</body>
+
+</html>
