@@ -4,10 +4,16 @@ MainController.prototype.from = 0;
 MainController.prototype.to = 400;
 MainController.prototype.diff = this.to - this.from;
 MainController.prototype.dur = 10 * 1000;
-MainController.prototype.speed = 5;
+MainController.prototype.speed = 10;
 MainController.prototype.wormParts = null;
 MainController.prototype.currentPart = null;
 MainController.prototype.direction = null;
+MainController.prototype.oldDirection = null;
+MainController.prototype.headCX = false;
+MainController.prototype.headCY = false;
+MainController.prototype.wormsHead = false;
+MainController.prototype.nextPosition = new Array;
+
 
 MainController.prototype.documentReady = function() {
 	// Add keyboard listener.
@@ -15,9 +21,10 @@ MainController.prototype.documentReady = function() {
 	// draw lines
 	mainController.drawLines();
 	mainController.wormParts = document.getElementsByClassName('worm-part');
+	mainController.wormsHead = mainController.wormParts[0];
 	mainController.direction = 3;
 	mainController.moveWorm = setInterval(
-		mainController.animateParts, 100);
+		mainController.animateParts, 200);
 }
 
 
@@ -49,14 +56,25 @@ MainController.prototype.moveWorm = function() {
 }
 
 MainController.prototype.animateParts = function() {
-	for (var i = mainController.wormParts.length - 1; i >= 0; i--) {
-		mainController.animateWormPart(mainController.wormParts[i]);
+	for (var i = 0; i < mainController.wormParts.length; i++) {
+		var currentCX = mainController.wormParts[i].getAttribute('cx');
+		var currentCY = mainController.wormParts[i].getAttribute('cy');
+		var coord = mainController.nextPosition[i];
+		var direction = mainController.direction;
+		if (coord && coord.x == currentCX && coord.y == currentCY) {
+			direction = coord.direction;
+			mainController.nextPosition[i] = false;
+		}else if (coord){
+			direction = mainController.oldDirection;
+		}
+		mainController.animateWormPart(mainController.wormParts[i], 
+			direction);
 	};
 }
 
-MainController.prototype.animateWormPart = function(wormPart) {
+MainController.prototype.animateWormPart = function(wormPart, direction) {
 	var coord = null;
-	switch (mainController.direction) {
+	switch (direction) {
 		// Left arrow.
 		case 0:
 			coord = parseInt(wormPart.getAttribute('cy'));
@@ -82,17 +100,34 @@ MainController.prototype.animateWormPart = function(wormPart) {
 }
 
 MainController.prototype.keyListener = function(evt) {
-	var direction = null;
+	var newDirection = null;
 	switch (evt.keyCode) {
 		// Left arrow.
 		case 37:
-			mainController.direction = 3;
+			newDirection = 3;
+			break;
+		case 38:
+			newDirection = 0;
 			break;
 			// Right arrow.
 		case 39:
-			mainController.direction = 1;
+			newDirection = 1;
+			break;
+		case 40:
+			newDirection = 2;
 			break;
 	}
+	if (Math.abs(mainController.direction - newDirection) != 2) {
+		var coord = new Object;
+		coord.x = mainController.wormsHead.getAttribute('cx');
+		coord.y = mainController.wormsHead.getAttribute('cy');
+		coord.direction = newDirection;
+		for (var i = 0; i < mainController.wormParts.length; i++) {
+			mainController.nextPosition[i] = coord;
+		};
+		mainController.oldDirection = mainController.direction;
+		mainController.direction = newDirection;
+	};
 }
 
 function WormPart() {}
